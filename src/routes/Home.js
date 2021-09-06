@@ -1,6 +1,7 @@
 import { gql, useQuery } from '@apollo/client';
 import styled from 'styled-components';
 import Movie from '../components/Movie';
+import Footer from '../components/Footer';
 
 const GET_MOVIES = gql`
   {
@@ -60,17 +61,6 @@ const Movies = styled.div`
   margin-bottom: 120px;
 `;
 
-const Footer = styled.footer`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100px;
-  font-weight: 700;
-  color: #111;
-  background-color: #ff0558;
-`;
-
 const Home = () => {
   const { loading, data } = useQuery(GET_MOVIES);
   console.log(loading, data);
@@ -87,7 +77,7 @@ const Home = () => {
           <Movie key={movie.id} id={movie.id} bg={movie.medium_cover_image} />
         ))}
       </Movies>
-      <Footer>Apollo 2021 with nomadcoders.co</Footer>
+      <Footer />
     </Container>
   );
 };
