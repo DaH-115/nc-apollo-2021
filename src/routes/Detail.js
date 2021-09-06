@@ -1,15 +1,72 @@
 import { useParams } from 'react-router';
 import { gql, useQuery } from '@apollo/client';
+import styled from 'styled-components';
 
 const GET_MOVIES = gql`
   query getMovie($id: Int!) {
     movie(id: $id) {
-      id
       title
       medium_cover_image
+      language
+      rating
       description_intro
     }
   }
+`;
+
+const Container = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background-color: #111;
+`;
+
+const Loading = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  background-color: #111;
+`;
+
+const Column = styled.div`
+  width: 50%;
+`;
+
+const Title = styled.h1`
+  color: #ff0558;
+  font-size: 64px;
+  font-weight: 700;
+  margin-bottom: 40px;
+`;
+
+const Subtitle = styled.h4`
+  color: #fff;
+  font-size: 32px;
+  margin-bottom: 10px;
+`;
+
+const Description = styled.p`
+  color: #fff;
+  font-size: 24px;
+  line-height: 1.3;
+`;
+
+const Poster = styled.div`
+  background-image: url(${(props) => props.bg});
+  width: 25%;
+  height: 70%;
+  background-size: cover;
+  background-position: center center;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0px 4px 20px rgba(63, 65, 80, 0.3);
 `;
 
 const Detail = () => {
@@ -18,17 +75,24 @@ const Detail = () => {
     variables: { id },
   });
 
-  console.log(loading, data);
-
-  if (loading) {
-    return 'Loading...';
-  }
-
-  if (data && data.movie) {
-    return data.movie.title;
-  }
-
-  return 'Detail';
+  return (
+    <Container>
+      {loading ? (
+        <Loading>Loading...</Loading>
+      ) : (
+        <>
+          <Column>
+            <Title>{data?.movie?.title}</Title>
+            <Subtitle>
+              {data?.movie?.language} · {data?.movie?.rating}
+            </Subtitle>
+            <Description>{data?.movie?.description_intro}</Description>
+          </Column>
+          <Poster bg={data?.movie?.medium_cover_image}></Poster>
+        </>
+      )}
+    </Container>
+  );
 };
 
 export default Detail;

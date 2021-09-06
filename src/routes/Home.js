@@ -1,4 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
+import styled from 'styled-components';
 import Movie from '../components/Movie';
 
 const GET_MOVIES = gql`
@@ -10,21 +11,84 @@ const GET_MOVIES = gql`
   }
 `;
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background-color: #111;
+`;
+
+const Header = styled.header`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 40vh;
+`;
+
+const Title = styled.h1`
+  font-size: 60px;
+  font-weight: 700;
+  color: #ff0558;
+  margin-bottom: 20px;
+`;
+
+const Subtitle = styled.h3`
+  font-size: 30px;
+  color: #fff;
+`;
+
+const Loading = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  background-color: #111;
+`;
+
+const Movies = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 30px;
+  width: 90%;
+  margin-bottom: 120px;
+`;
+
+const Footer = styled.footer`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+  font-weight: 700;
+  color: #111;
+  background-color: #ff0558;
+`;
+
 const Home = () => {
   const { loading, data } = useQuery(GET_MOVIES);
   console.log(loading, data);
 
   return (
-    <>
-      <header>
-        <title>Apollo 2021</title>
-        <h2>My First GraphQL</h2>
-      </header>
-      {loading && <p>Loading...</p>}
-      {!loading &&
-        data.movies &&
-        data.movies.map((movie) => <Movie key={movie.id} {...movie} />)}
-    </>
+    <Container>
+      <Header>
+        <Title>Apollo 2021</Title>
+        <Subtitle>My First GraphQL</Subtitle>
+      </Header>
+      {loading && <Loading>Loading...</Loading>}
+      <Movies>
+        {data?.movies?.map((movie) => (
+          <Movie key={movie.id} id={movie.id} bg={movie.medium_cover_image} />
+        ))}
+      </Movies>
+      <Footer>Apollo 2021 with nomadcoders.co</Footer>
+    </Container>
   );
 };
 
