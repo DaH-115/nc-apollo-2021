@@ -4,18 +4,21 @@ import styled from 'styled-components';
 import Movie from '../components/Movie';
 import Footer from '../components/Footer';
 
-const GET_MOVIES = gql`
+const GET_MOVIE = gql`
   query getMovie($id: Int!) {
     movie(id: $id) {
+      id
       title
       medium_cover_image
       language
       rating
       description_intro
+      isLiked @client
     }
     suggestions(id: $id) {
       id
       medium_cover_image
+      isLiked @client
     }
   }
 `;
@@ -101,11 +104,12 @@ const Movies = styled.div`
 
 const Detail = () => {
   const { id } = useParams();
-  const { loading, data } = useQuery(GET_MOVIES, {
-    variables: { id },
+  const { loading, data } = useQuery(GET_MOVIE, {
+    variables: {
+      id: parseInt(id),
+      isCachedYet: true,
+    },
   });
-
-  console.log(data?.suggestions);
 
   return (
     <>
@@ -115,7 +119,10 @@ const Detail = () => {
         <>
           <Container>
             <Column>
-              <Title>{data?.movie?.title}</Title>
+              <Title>
+                {data?.movie?.title}{' '}
+                {data?.movie?.isLiked ? '<< Love' : '<< Fxxk'}
+              </Title>
               <Subtitle>
                 {data?.movie?.language} · {data?.movie?.rating}
               </Subtitle>
@@ -123,6 +130,7 @@ const Detail = () => {
             </Column>
             <Poster bg={data?.movie?.medium_cover_image}></Poster>
           </Container>
+
           <SuggText>Suggestions</SuggText>
           <Scontainer>
             <Movies>
@@ -130,6 +138,7 @@ const Detail = () => {
                 <Movie
                   key={sugg.id}
                   id={sugg.id}
+                  isLiked={sugg.isLiked}
                   bg={sugg.medium_cover_image}
                 />
               ))}
