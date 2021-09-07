@@ -62,9 +62,15 @@ const Subtitle = styled.h4`
 `;
 
 const Description = styled.p`
+  width: 100%;
+  height: 300px;
+  overflow-y: auto;
   color: #fff;
   font-size: 24px;
   line-height: 1.3;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Poster = styled.div`
